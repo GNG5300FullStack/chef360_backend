@@ -9,8 +9,7 @@ from tools.returnPattern import errorReturn
 userPreferenceRepo = UserPreferenceRepo()
 
 def getPreference():
-    data=request.get_json()
-    access_token=data["access_token"]
+    access_token = request.headers["Authorization"].split(" ")[1]
     decoded_token =decode_token(access_token)
     userPreference=userPreferenceRepo.getPreference(decoded_token["sub"])
     if userPreference:
@@ -29,9 +28,9 @@ def getPreference():
     else:
         return errorReturn(400,"This user do not have preference")
     
-def addPreference():
+def     addPreference():
     data=request.get_json()
-    access_token=data["access_token"]
+    access_token=access_token = request.headers["Authorization"].split(" ")[1]
 
     decoded_token =decode_token(access_token)
     userPreference=userPreferenceRepo.getPreference(decoded_token["sub"])
@@ -44,9 +43,6 @@ def addPreference():
         userPreferenceRepo.addPreference(decoded_token["sub"],cookware,allergics)
     return{
         "code":200,
-            "message":"Success",
-            "data":{
-
-                }
+        "message":"Success"
     }
 

@@ -3,6 +3,7 @@ from flask import Flask
 from routes.general import general_bp
 from routes.auth import auth_bp
 from routes.preference import preference_bp
+from routes.recipe import recipe_bp
 from _credential import server, driver, username, password
 from _connection import get_connection_string
 import os
@@ -26,7 +27,7 @@ jwt.init_app(app)
 app.register_blueprint(general_bp)
 app.register_blueprint(auth_bp, url_prefix='/auth')
 app.register_blueprint(preference_bp,url_prefix='/preference')
-
+app.register_blueprint(recipe_bp,url_prefix='/recipe')
 
 
 if __name__ == '__main__':  # Running the app
