@@ -7,8 +7,6 @@ import time
 import json
 import jwtTool
 
-start=3
-
 userRepo = UserRepo()
 
 def login():
@@ -35,12 +33,11 @@ def register():
     USER_TYPE = 'REGULAR_USER'
     REGISTRATION_TIME = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
     LAST_LOGIN_TIME = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-    global start
-    E_MAIL=userRepo.register(start, USER_PASSWORD, FULL_NAME, LAST_NAME, E_MAIL, PHONE_NUMBER, REGISTRATION_TIME,
+    
+    E_MAIL=userRepo.register(USER_PASSWORD, FULL_NAME, LAST_NAME, E_MAIL, PHONE_NUMBER, REGISTRATION_TIME,
                 LAST_LOGIN_TIME, USER_STATUS, USER_TYPE, COUNTRY, CITY)
 
     if E_MAIL:
-        start += 1
         access_token = create_access_token(identity=E_MAIL)
         return jsonify(message="Register succeeded!", access_token=access_token)
     else:

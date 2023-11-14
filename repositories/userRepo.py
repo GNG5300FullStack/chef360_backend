@@ -16,15 +16,15 @@ class UserRepo:
         user = User.query.filter_by(e_mail=email, user_password=password).first()
         return user
         
-    def register(self,start, USER_PASSWORD,FULL_NAME,LAST_NAME,E_MAIL,PHONE_NUMBER,REGISTRATION_TIME,LAST_LOGIN_TIME,USER_STATUS,USER_TYPE,COUNTRY,CITY):
+    def register(self, USER_PASSWORD,FULL_NAME,LAST_NAME,E_MAIL,PHONE_NUMBER,REGISTRATION_TIME,LAST_LOGIN_TIME,USER_STATUS,USER_TYPE,COUNTRY,CITY):
         #connection_string = os.getenv("AZURE_SQL_CONNECTIONSTRING")
         #dev_connection_string = connection_string.format(drv=driver, svr=server, uid=username, pwd=password)
         #conn = pyodbc.connect(dev_connection_string)
 
         conn = get_conn()
         cursor = conn.cursor() 
-        cursor.execute("INSERT INTO dbo.USER_PROFILE VALUES(?,?,?,?,?,?,?,?,?,?,?,?)", (
-        start, USER_PASSWORD, FULL_NAME, LAST_NAME, E_MAIL, PHONE_NUMBER, REGISTRATION_TIME,
+        cursor.execute("INSERT INTO dbo.USER_PROFILE VALUES(?,?,?,?,?,?,?,?,?,?,?)", (
+        USER_PASSWORD, FULL_NAME, LAST_NAME, E_MAIL, PHONE_NUMBER, REGISTRATION_TIME,
                 LAST_LOGIN_TIME, USER_STATUS, USER_TYPE, COUNTRY, CITY))
         conn.commit()
         return E_MAIL
