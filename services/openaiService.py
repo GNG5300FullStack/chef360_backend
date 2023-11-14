@@ -3,6 +3,7 @@ from flask import jsonify, request
 from tools.toolbox import HelperTools
 from dotenv import load_dotenv
 import os
+import json
 tools=HelperTools()
 load_dotenv()
 request_keys = ['ingredients', 'allergies']
@@ -18,7 +19,8 @@ def getCompletion(prompt, model="gpt-3.5-turbo-1106"):
         messages=messages,
         temperature=0.7,
     )
-    return response.choices[0].message.content
+  
+    return json.loads(response.choices[0].message.content)
 
 def getRecipe(nbrOfResults=1):
     # We will use a json format to send the transaction with all keys: ingredients and allergies.
