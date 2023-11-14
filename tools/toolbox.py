@@ -4,9 +4,6 @@ class HelperTools():
     
     def __init__(self):
         self.CLASS_NAME = type(self).__name__
-        load_dotenv()
-        self.retrieved_secret = dict()
-        self.kv_base_uri = "https://{0}.vault.azure.net"
         print("__init__")
     
     '''
