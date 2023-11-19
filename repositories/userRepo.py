@@ -39,9 +39,8 @@ class UserRepo:
         row=cursor.execute("SELECT USERID,USER_PASSWORD,FULL_NAME,LAST_NAME,E_MAIL,PHONE_NUMBER,REGISTRATION_TIME,LAST_LOGIN_TIME,USER_STATUS,USER_TYPE,COUNTRY,CITY FROM dbo.USER_PROFILE WHERE E_MAIL=?",MAIL).fetchone()
         if(row is None):
             return {"code": 404,
-            "message": "Not found",
-            "data": {
-            }}
+            "message": "Not found"
+            }
         row.USERID = row.USERID
         row.FULL_NAME = stringOperator.splitUnderscores(row.FULL_NAME)
         row.LAST_NAME = stringOperator.splitUnderscores(row.LAST_NAME)
@@ -72,3 +71,12 @@ class UserRepo:
             }
         }
         return ret
+    def checkRegister(self,MAIL):
+        conn = get_conn()
+        cursor = conn.cursor()
+        row=cursor.execute("SELECT USERID,USER_PASSWORD,FULL_NAME,LAST_NAME,E_MAIL,PHONE_NUMBER,REGISTRATION_TIME,LAST_LOGIN_TIME,USER_STATUS,USER_TYPE,COUNTRY,CITY FROM dbo.USER_PROFILE WHERE E_MAIL=?",MAIL).fetchone()
+        if(row is not None):
+            return {"code": 400,
+            "message": "Already Exist",
+            }
+        return "Good"

@@ -22,18 +22,23 @@ def login():
             return jsonify(message="Bad email or password"), 401
 
 def register():
-    USER_PASSWORD = request.form['USER_PASSWORD']
-    FULL_NAME = request.form['FULL_NAME']
-    LAST_NAME = request.form['LAST_NAME']
-    E_MAIL = request.form['E_MAIL']
-    PHONE_NUMBER = request.form['PHONE_NUMBER']
-    COUNTRY = request.form['COUNTRY']
-    CITY = request.form['CITY']
+    data = request.get_json()
+    USER_PASSWORD = data['USER_PASSWORD']
+    FULL_NAME = data['FULL_NAME']
+    LAST_NAME = data['LAST_NAME']
+    E_MAIL = data['E_MAIL']
+    PHONE_NUMBER = data['PHONE_NUMBER']
+    COUNTRY = data['COUNTRY']
+    CITY = data['CITY']
     USER_STATUS = 'ONLINE'
     USER_TYPE = 'REGULAR_USER'
     REGISTRATION_TIME = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
     LAST_LOGIN_TIME = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-    
+
+    result=userRepo.checkRegister(E_MAIL)
+    if result!='Good':
+        return result
+
     E_MAIL=userRepo.register(USER_PASSWORD, FULL_NAME, LAST_NAME, E_MAIL, PHONE_NUMBER, REGISTRATION_TIME,
                 LAST_LOGIN_TIME, USER_STATUS, USER_TYPE, COUNTRY, CITY)
 
@@ -59,10 +64,10 @@ def getPersonalInfor():
     data,expired,state,message=jwtTool.decodeToken(token)
     if(state==False):
         if(str(message)=="Signature has expired"):
-            return errorReturn(400,str(message))
+            return errorReturn(401,str(message))
         return errorReturn(300,str(message))
     if expired==True:
-        return errorReturn(400,"This user already expired")
+        return errorReturn(401,"This user already expired")
 
     result=userRepo.getPersonalInfor(data['sub'])
     if result['code']==200:
