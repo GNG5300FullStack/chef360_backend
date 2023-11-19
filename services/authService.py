@@ -34,14 +34,17 @@ def register():
     USER_TYPE = 'REGULAR_USER'
     REGISTRATION_TIME = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
     LAST_LOGIN_TIME = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-
+    print(f'{***E_MAIL=}\n')
+        
     result=userRepo.checkRegister(E_MAIL)
+    print('{***{result=}\n')
     if result!='Good':
         return result
 
     E_MAIL=userRepo.register(USER_PASSWORD, FULL_NAME, LAST_NAME, E_MAIL, PHONE_NUMBER, REGISTRATION_TIME,
                 LAST_LOGIN_TIME, USER_STATUS, USER_TYPE, COUNTRY, CITY)
 
+    print('{***After creation {E_MAIL=}\n')
     if E_MAIL:
         access_token = create_access_token(identity=E_MAIL)
         return jsonify(message="Register succeeded!", access_token=access_token)
