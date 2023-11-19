@@ -22,7 +22,6 @@ def login():
             return jsonify(message="Bad email or password"), 401
 
 def register():
-    print(f'***{request.json['E_MAIL']=}\n')
     data = request.get_json()
     print(f'***{data=}\n')
     USER_PASSWORD = data['USER_PASSWORD']
