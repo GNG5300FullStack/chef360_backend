@@ -1,36 +1,58 @@
-# Python package
-# Create and test a Python package on multiple Python versions.
-# Add steps that analyze code, save the dist with the build record, publish to a PyPI-compatible index, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/python
+# Node.js with React
+# Build a Node.js project that uses React.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 trigger:
-- build
+- master
+
+variables:
+  buildPath: '/build'
+
 
 pool:
+  name: 'Local'
   vmImage: ubuntu-latest
-strategy:
-  matrix:
-    Python27:
-      python.version: '2.7'
-    Python35:
-      python.version: '3.5'
-    Python36:
-      python.version: '3.6'
-    Python37:
-      python.version: '3.7'
 
+# Install Node JS
 steps:
-- task: UsePythonVersion@0
+- task: NodeTool@0
   inputs:
-    versionSpec: '$(python.version)'
-  displayName: 'Use Python $(python.version)'
+    versionSpec: '16.x'
+  displayName: 'Install Node.js 16'
 
+# Install npm dependencies of the project
 - script: |
-    python -m pip install --upgrade pip
-    pip install -r requirements.txt
-  displayName: 'Install dependencies'
+    npm install
+  displayName: 'npm install'
 
+# Built the react project
 - script: |
-    pip install pytest pytest-azurepipelines
-    pytest
-  displayName: 'pytest'
+    npm run build
+  displayName: 'npm run build'
+
+# Zip the content of the built folder
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(Build.SourcesDirectory)/build'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    replaceExistingArchive: true
+
+# Publish the zip file as an artifact to later be deployed 
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+
+
+# Deploy the application to webAPP services, which is a windows web app
+- task: AzureRmWebAppDeployment@4
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'GNG-5300-Service-Account'
+    appType: 'webApp'
+    WebAppName: 'gng-5300-react-app'
+    packageForLinux: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
