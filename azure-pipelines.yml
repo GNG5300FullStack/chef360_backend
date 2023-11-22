@@ -52,7 +52,7 @@ steps:
 - task: AzureRmWebAppDeployment@4
   inputs:
     ConnectionType: 'AzureRM'
-    azureSubscription: 'GNG-5300-Service-Account'
+    azureSubscription: 'Azure for Students'
     appType: 'webApp'
-    WebAppName: 'gng-5300-react-app'
+    WebAppName: 'app-cheef360'
     packageForLinux: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
